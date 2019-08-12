@@ -25,7 +25,6 @@ import { EditorCommands } from '@theia/editor/lib/browser';
 import { MonacoEditor } from './monaco-editor';
 import { MonacoCommandRegistry, MonacoEditorCommandHandler } from './monaco-command-registry';
 import MenuRegistry = monaco.actions.MenuRegistry;
-import MenuId = monaco.actions.MenuId;
 
 export type MonacoCommand = Command & { delegate?: string };
 export namespace MonacoCommands {
@@ -72,7 +71,7 @@ export namespace MonacoCommands {
         'find.history.showPrevious',
     ]);
     const iconClasses = new Map<string, string>();
-    for (const menuItem of MenuRegistry.getMenuItems(MenuId.EditorContext)) {
+    for (const menuItem of MenuRegistry.getMenuItems(7)) {
         if (menuItem.command.iconClass) {
             iconClasses.set(menuItem.command.id, menuItem.command.iconClass);
         }
@@ -251,7 +250,7 @@ export class MonacoEditorCommandHandlers implements CommandContribution {
 
     protected newKeyboardHandler(action: string): MonacoEditorCommandHandler {
         return {
-            execute: (editor, ...args) => editor.getControl().cursor.trigger('keyboard', action, args)
+            execute: (editor, ...args) => editor.getControl()._modelData.cursor.trigger('keyboard', action, args)
         };
     }
     protected newCommandHandler(action: string): MonacoEditorCommandHandler {
